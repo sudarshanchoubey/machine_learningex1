@@ -13,7 +13,7 @@ import org.knowm.xchart.internal.style.Styler.LegendPosition;
 
 
 
-/** Example of use of Matrix Class, featuring magic squares. **/
+/** Linear Regression assignment **/
 
 public class LinearRegression {
 	public static double computeCost(Matrix X, Matrix y, Matrix theta) {
@@ -75,7 +75,7 @@ public class LinearRegression {
 		BufferedReader br = null;
 		Matrix m = null;
 		
-		is = new FileInputStream("C:/Users/schoubey/Documents/Coding/java_coding/Jama/examples/ex1data1.txt");
+		is = new FileInputStream("data/ex1data1.txt");
 		isr = new InputStreamReader(is);
 		br = new BufferedReader(isr);
 		try {
