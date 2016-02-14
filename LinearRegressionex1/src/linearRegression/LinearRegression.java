@@ -18,17 +18,17 @@ import org.knowm.xchart.internal.style.markers.None;
 /** Linear Regression assignment **/
 
 public class LinearRegression {
+	/* Computes the cost for all inputs using current theta.
+	 * Cost function is summation of (theta' x X[i,:] - y[i])^2 / (2 * number of inputs)
+	 */
 	public static double computeCost(Matrix X, Matrix y, Matrix theta) {
 		int m = X.getRowDimension();
 		Matrix temp = null;
-		Matrix thetaT = null;
 		Matrix XTint = null;
 		Matrix H = new Matrix(m, 1);
 		for (int i = 0;i < m;i++) {
-			thetaT = theta.transpose();
-			XTint = X.getMatrix(i, i, 0, X.getColumnDimension() - 1);
-			XTint = XTint.transpose();
-			temp = thetaT.times(XTint);
+			XTint = X.getMatrix(i, i, 0, X.getColumnDimension() - 1).transpose();
+			temp = theta.transpose().times(XTint);
 			H.set(i,0,temp.get(0,0));
 		}
 		H = H.minusEquals(y);
@@ -39,10 +39,12 @@ public class LinearRegression {
 		}
 		return result/(2 * m);
 	}
+	/*
+	 * Plots all observations on a chart.
+	 */
 	public static Chart_XY showChart(double xData[], double yData[]) {
 		Chart_XY chart = new ChartBuilder_XY().width(840).height(620).build();
 		 
-	    // Customize Chart
 	    chart.getStyler().setDefaultSeriesRenderStyle(ChartXYSeriesRenderStyle.Scatter);
 	    chart.getStyler().setChartTitleVisible(true);
 	    chart.setTitle("Profits by population");
@@ -54,6 +56,9 @@ public class LinearRegression {
 		new SwingWrapper(chart).displayChart();
 		return chart;
 	}
+	/*
+	 * Plots the observations and the line for our predictions.
+	 */
 	public static Chart_XY showPredictionChart(Chart_XY chart,double xData[], double yData[]) {
 		Series_XY series= chart.addSeries("Predictions", xData, yData);
 		series.setChartXYSeriesRenderStyle(ChartXYSeriesRenderStyle.Line);
@@ -61,11 +66,13 @@ public class LinearRegression {
 		new SwingWrapper(chart).displayChart();
 		return chart;
 	}
+	/*
+	 * Run gradient descent for required number of iterations.
+	 */
 	public static Matrix gradientDescent(Matrix X, Matrix y, Matrix theta, double alpha, int iterations) {
 		int m = X.getRowDimension();
 		Matrix J_History = new Matrix(iterations, 1);
 		Matrix temp1 = null;
-		Matrix thetaT = null;
 		Matrix XTint = null;
 		Matrix temp = null;
 		Matrix temp2 = null;
@@ -77,10 +84,8 @@ public class LinearRegression {
 			for (int j = 0;j < thetaRowDim; j++) {
 				hterm = 0;
 				for (int k = 0;k < m;k++) {
-					thetaT = theta.transpose();
 					XTint = X.getMatrix(k, k, 0, X.getColumnDimension() - 1);
-					XTint = XTint.transpose();
-					temp1 = thetaT.times(XTint);
+					temp1 = theta.transpose().times(XTint.transpose());
 					temp2 = temp1.minus(y.getMatrix(k,k,0,0));
 					temp2 = temp2.times(X.getMatrix(k,k,j,j));
 					hterm = hterm + temp2.get(0,0);
@@ -90,7 +95,6 @@ public class LinearRegression {
 			theta = theta.minusEquals(temp);
 			J_History.set(i,0,computeCost(X, y, theta));
 		}
-//		J_History.print(6,3);
 		return theta;
 	}
 	public static Matrix readInputMatrix() throws Exception {
